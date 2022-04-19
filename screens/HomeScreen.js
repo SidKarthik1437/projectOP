@@ -24,10 +24,11 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      const galleryStatus = await ImagePicker.getMediaLibraryPermissionsAsync();
+      const galleryStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === "granted");
     })();
-    setCam(false);
+    // setCam(false);
   }, []);
 
   if (hasGalleryPermission === false) {
@@ -36,8 +37,8 @@ const HomeScreen = ({ navigation }) => {
   if (hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  console.log(image);
-  React.useLayoutEffect(() => {
+
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button

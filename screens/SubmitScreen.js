@@ -7,29 +7,21 @@ import * as Location from "expo-location";
 
 const SubmitScreen = () => {
   const [image, setImage] = useRecoilState(ImageState);
+  const [hasGeoPermission, setHasGeoPermission] = useState(null);
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
+      const geoStatus = await Location.requestForegroundPermissionsAsync();
+      setHasGeoPermission(geoStatus.status === "granted");
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      let loc = await Location.getCurrentPositionAsync({});
+      setLocation(loc);
+      console.log(loc);
     })();
   }, []);
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-  console.log(text);
+  const upload = async () => {};
 
   return (
     <View style={tw`flex-1 items-center `}>

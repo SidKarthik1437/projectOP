@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ import Animated from "react-native-reanimated";
 import { useRecoilState } from "recoil";
 import { ImageState } from "../atoms/ImageState";
 import { CamState } from "../atoms/CameraState";
+import { Camera } from "expo-camera";
 
 const HomeScreen = ({ navigation }) => {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -23,7 +24,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      const galleryStatus = await Camera.requestMediaLibraryPermissionsAsync();
+      const galleryStatus = await ImagePicker.getMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === "granted");
     })();
     setCam(false);
@@ -35,6 +36,18 @@ const HomeScreen = ({ navigation }) => {
   if (hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
+  console.log(image);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          onPress={() => navigation.navigate("Submit")}
+          title="Next"
+          disabled={false}
+        />
+      ),
+    });
+  }, [navigation]);
 
   const renderInner = () => (
     <View style={styles.panel}>

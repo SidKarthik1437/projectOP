@@ -32,16 +32,16 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            // options={{
-            //   headerRight: () => (
-            //     <Button
-            //       title="Next"
-            //       onPress={() => ("Submit")}
-            //       color="#FF6347"
-            //       // disabled={image ? "true" : "false"}
-            //     />
-            //   ),
-            // }}
+            options={{
+              headerRight: () => (
+                <Button
+                  title="Next"
+                  onPress={() => "Submit"}
+                  color="#FF6347"
+                  // disabled={image ? "true" : "false"}
+                />
+              ),
+            }}
           />
           <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="Submit" component={SubmitScreen} />

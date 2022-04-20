@@ -82,14 +82,17 @@ const HomeScreen = ({ navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      // base64: true,
       aspect: [1, 1],
       quality: 1,
+      exif: true,
     });
 
-    console.log(result);
+    console.log("img", result);
 
     if (!result.cancelled) {
       setImage(result.uri);
+      // console.log("img", result);
       navigation.navigate("Submit");
     }
   };

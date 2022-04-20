@@ -42,7 +42,9 @@ const SubmitScreen = ({ navigation }) => {
     formData.append("longitude", location.coords.longitude);
     // headers.append("Authorization", "Client-ID 3980074b5b848c3");
     // var URL = "https://api.imgur.com/3/image";
-    var URL = "http://192.168.29.138:8000/api/probs/create";
+    var URL =
+      "http://d2f1-2405-201-d001-dbe6-ed75-674e-515d-524a.ngrok.io/api/probs/create";
+    // var URL = "http://192.168.29.138:8000/api/probs/create";
     // var URL = "http://192.168.29.220:8000/api/probs/create";
     await fetch(URL, {
       method: "POST",

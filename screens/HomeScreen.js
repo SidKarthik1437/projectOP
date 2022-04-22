@@ -45,6 +45,7 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Submit")}
           title="Next"
           disabled={false}
+          color="#FF6347"
         />
       ),
     });

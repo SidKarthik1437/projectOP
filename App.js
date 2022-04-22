@@ -9,46 +9,64 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import tw from "twrnc";
-import * as NavigationBar from "expo-navigation-bar";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { RecoilRoot } from "recoil";
-import { useRecoilValue } from "recoil";
-import { ImageState } from "./atoms/ImageState";
+import { HeaderStyleInterpolators } from "@react-navigation/stack";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 import HomeScreen from "./screens/HomeScreen";
 import CamScreen from "./screens/CamScreen";
 import SubmitScreen from "./screens/SubmitScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
+import LoginScreen from "./screens/LoginScreen";
+
+function DrawerRoutes() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        gestureEnabled: true,
+      }}
+    >
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerRightContainerStyle: {
+            paddingRight: 10,
+          },
+        }}
+      />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
+      <Stack.Screen name="Submit" component={SubmitScreen} />
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
+        <Stack.Screen name="Cam" component={CamScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+}
+
 export default function App({ navigation }) {
   // const [image] = useRecoilValue(ImageState);
   return (
     <RecoilRoot>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              headerRight: () => (
-                <Button
-                  title="Next"
-                  onPress={() => "Submit"}
-                  color="#FF6347"
-                  // disabled={image ? "true" : "false"}
-                />
-              ),
-            }}
-          />
-          <Stack.Screen name="Settings" component={SettingsScreen} />
-          <Stack.Screen name="Submit" component={SubmitScreen} />
-          <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen name="Cam" component={CamScreen} />
-          </Stack.Group>
-        </Stack.Navigator>
+        <Drawer.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: true,
+            swipeEdgeWidth: 600,
+          }}
+        >
+          <Drawer.Screen name="Main" component={DrawerRoutes} />
+          <Drawer.Screen name="Login" component={LoginScreen} />
+        </Drawer.Navigator>
       </NavigationContainer>
     </RecoilRoot>
   );
@@ -62,3 +80,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+// options={{
+//           headerRight: () => (
+//             <Button
+//               title="Next"
+//               onPress={() => "Submit"}
+//               color="#FF6347"
+//               style={{ marginRight: 10 }}
+//               // disabled={image ? "true" : "false"}
+//             />
+//           ),
+//         }}

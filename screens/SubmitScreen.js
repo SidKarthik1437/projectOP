@@ -13,11 +13,14 @@ import { ImageState } from "../atoms/ImageState";
 import tw from "twrnc";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
+import axios from "axios";
+import { UserState } from "../atoms/UserState";
 
 const SubmitScreen = ({ navigation }) => {
   const [image, setImage] = useRecoilState(ImageState);
   const [hasGeoPermission, setHasGeoPermission] = useState(null);
   const [location, setLocation] = useState(null);
+  const [user, setUser] = useRecoilState(UserState);
   // console.log(location);
 
   useEffect(() => {
@@ -25,31 +28,42 @@ const SubmitScreen = ({ navigation }) => {
       const geoStatus = await Location.requestForegroundPermissionsAsync();
       setHasGeoPermission(geoStatus.status === "granted");
 
-      let loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc);
+      // let loc = await Location.getCurrentPositionAsync({});
+      // setLocation(loc);
     })();
   }, []);
+  const getLoc = async () => {
+    // const geoStatus = await Location.requestForegroundPermissionsAsync();
+    // setHasGeoPermission(geoStatus.status === "granted");
+
+    return await Location.getCurrentPositionAsync();
+  };
 
   const uploadData = async () => {
     let formData = new FormData();
+    await getLoc().then((loc) => {
+      setLocation(loc);
+      // console.log(location);
+    });
     formData.append("image", {
       uri: image,
       type: "image/jpeg",
       name: "image.jpg",
     });
-    console.log(formData);
     formData.append("latitude", location.coords.latitude);
     formData.append("longitude", location.coords.longitude);
+    console.log(formData);
     // headers.append("Authorization", "Client-ID 3980074b5b848c3");
     // var URL = "https://api.imgur.com/3/image";
     // var URL = "https://6e74-2405-201-d001-dbe6-b04d-2c5d-58a7-4d1.in.ngrok.io/api/probs/create";
-    var URL = "http://192.168.29.138:8000/api/probs/create";
+    var URL = "http://192.168.1.2:8000/api/probs/create";
     // var URL = "http://192.168.29.220:8000/api/probs/create";
     await fetch(URL, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
+        Authorization: `JWT ${user.access}`,
       },
       body: formData,
       // body: JSON.stringify({
@@ -60,6 +74,14 @@ const SubmitScreen = ({ navigation }) => {
       //   },
       // }),
     })
+      // await axios
+      //   .post(URL, formData, {
+      //     headers: {
+      //       // Accept: "application/json",
+      //       "Content-Type": "multipart/form-data",
+      //       Authorization: `JWT ${user.access}`,
+      //     },
+      //   })
       .then((res) => {
         console.log(res);
         Toast.show({
